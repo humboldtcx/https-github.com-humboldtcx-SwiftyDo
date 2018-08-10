@@ -12,8 +12,13 @@ class TodoListViewController : UITableViewController {
 
     var itemArray = ["Clean Cat", "Eat Pudding", "Chew Leg"]
     
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+            itemArray = items
+        }
     }
     
     //MARK - Setup the Table View
@@ -50,8 +55,10 @@ class TodoListViewController : UITableViewController {
         let alert = UIAlertController(title: "Add New SwiftyDo Item", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             self.itemArray.append(newItemTextField.text ?? "Think of Something To Do")
+            self.defaults.set(self.itemArray, forKey: "TodoListArray")
             self.tableView.reloadData()
         }
+        
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "Create New Item"
             newItemTextField = alertTextField
@@ -59,8 +66,6 @@ class TodoListViewController : UITableViewController {
         
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
-        
-        
     }
     
 }
